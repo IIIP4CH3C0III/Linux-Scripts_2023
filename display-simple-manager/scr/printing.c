@@ -25,6 +25,9 @@ void showKeys   ( WINDOW **bottomWindow)
 void printInformation( MONITOR * monitors , int monitorCount , WINDOW **mainWindow , int monitorSelected ) 
 {
 	wmove(*mainWindow,3,0);
+
+	bool flag = false;
+	
 	// Choose number 7, because the prints start in Line 3, and then 
 	// the sum of the 5 options including the monitor name make it 7
 	// and multipling by i+1 means we are depending in the monitor number
@@ -32,7 +35,7 @@ void printInformation( MONITOR * monitors , int monitorCount , WINDOW **mainWind
 
 	// 36 is the better number for cols 
 	if( COLS > 44 )
-	    for ( int i = 0; i < monitorCount; i++) 
+	    for ( int i = 0 ; i < monitorCount; i++) 
 			if( linesOfTextOcupied * (i+1) < LINES - 4 )
 			{
 				if( monitorSelected == (i+1) )
@@ -51,7 +54,13 @@ void printInformation( MONITOR * monitors , int monitorCount , WINDOW **mainWind
 				wprintw( *mainWindow,  "\tVibrant hue    : %3d \n\n",	        monitors[i].hue   );
 			}
 			else
-				wprintw( *mainWindow,  "\tMore down...\n" );
+			{
+				if ( !flag )
+				{
+					wprintw( *mainWindow,  "\tMore down...\n" );
+					flag = true;
+				}
+			}
 	else
 		wprintw( *mainWindow,  " Need a larger window!\n" );
 		
