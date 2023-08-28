@@ -13,7 +13,7 @@ bool setValues( MONITOR * monitors , WINDOW **mainWindow , int monitorSelected ,
 	float value  = -1.00 ;
 	float valuesGamma[3] = {-1.00,-1.00,-1.00};
 
-	mvwprintw( *mainWindow , LINES - 1 , 1 , "Values range ( 0 - 100 )");
+	mvwprintw( *mainWindow , LINES - 1 , 1 , "Values range ( 0 - 100 )%% ");
 	
 	if( line != 2 )
 		while( value <= 0 || value > 100 )

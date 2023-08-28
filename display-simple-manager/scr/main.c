@@ -58,16 +58,16 @@ int main (void)
 	bool firstTime = true;                        /* Variable that represents the first loop               */
 	int keyPressed;                               /* Variable that stores the pressed key by the user      */
 
-	while( !leave )
+	while( !leave )                               /* Main loop, if leave becomes true the program is over  */
 	{
-		if( windowSizeChanges(&columnsBefore,&rowsBefore) || firstTime )
-		{
-			clear();
+		if( firstTime ||  windowSizeChanges( &columnsBefore, &rowsBefore) )
+		{                                         /* Be prepared to react if the window size is changed    */                           
+			clear();                              /* Clear the screen as the name says                     */
 
-			bottomWindow = NULL;
+			bottomWindow = NULL;                  
 			topWindow 	 = NULL;
 			mainWindow   = NULL;
-
+                                                  /* Initialize the windows and present the version & keys */
 			showDisplay( &bottomWindow , &topWindow , &mainWindow );
 			showVersion( &topWindow );
 			showKeys   ( &bottomWindow);
