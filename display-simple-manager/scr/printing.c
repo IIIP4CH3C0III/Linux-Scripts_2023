@@ -14,10 +14,15 @@ void showVersion( WINDOW **topWindow )
 
 void showKeys   ( WINDOW **bottomWindow)
 {
-	wprintw( *bottomWindow , 
-			   " <B> brightness | <G> gamma | <C> color | <V> vibrance\n" ); 
-	wprintw( *bottomWindow , 
-			   " <Q> quit | <arrows> move | <A> apply | <D> default " ); 
+	char str[] = {" <B> brightness | <G> gamma | <C> color | <V> vibrance"};
+	int size   = strlen(str); 
+		
+	mvwprintw( *bottomWindow , 0, COLS/2 - size/2 , "%s", str); 
+
+	strcpy(str," <Q> quit | <arrows> move | <A> apply | <D> default ");
+	size = strlen( str );
+
+	mvwprintw( *bottomWindow , 1, COLS/2 - size/2 , "%s" , str);
 			  			   
 	wrefresh ( *bottomWindow );
 }
