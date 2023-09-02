@@ -1,3 +1,10 @@
+/*
+ * File name   : display.h
+ *
+ * Author	   : Fábio Pacheco
+ *
+ */
+
 #ifndef DISPLAY_H
 #define DISPLAY_H
 

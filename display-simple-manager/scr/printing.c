@@ -1,3 +1,12 @@
+/*
+ * File name   : printing.c
+ *
+ * Author	   : Fábio Pacheco
+ *
+ * Description : Functions that print most of the information present in program
+ *
+ */
+
 #include "printing.h"
 
 void showVersion( WINDOW **topWindow )

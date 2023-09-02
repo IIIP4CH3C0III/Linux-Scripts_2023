@@ -3,8 +3,8 @@
  *
  * Author	   : Fábio Pacheco
  *
- * Description : Being able to change the brightness, gamma and color temperature of the display(s), 
- *				 all in the terminal, using linux tools.
+ * Description : Main file for the program, most of the usefull values are defined here, so as the shortkeys.
+ *
  */
 
 #include <stdlib.h>                               /* Library used to manage bash comands and files         */

@@ -1,3 +1,10 @@
+/*
+ * File name   : settings.h
+ *
+ * Author	   : Fábio Pacheco
+ *
+ */
+ 
 #ifndef SETTINGS_H
 #define SETTINGS_H
 

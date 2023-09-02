@@ -1,3 +1,13 @@
+/*
+ * File name   : display.c
+ *
+ * Author	   : Fábio Pacheco
+ *
+ * Description : Functions that play with Ncurses library, and do most of the functions necessary.
+ *               There is the possibility of changing the color pair in here.
+ */
+
+
 #include "display.h"
 
 void initDisplay (void)

@@ -1,3 +1,10 @@
+/*
+ * File name   : system.h
+ *
+ * Author	   : Fábio Pacheco
+ *
+ */
+
 #ifndef SYSTEM_H
 #define SYSTEM_H
 

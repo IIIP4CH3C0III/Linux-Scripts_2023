@@ -1,3 +1,12 @@
+/*
+ * File name   : settings.c
+ *
+ * Author	   : Fábio Pacheco
+ *
+ * Description : Functions to set values, apply and some other functions to copy arrays or do some linear equations
+ *
+ */
+
 #include "settings.h"
 #include "display.h"
 
@@ -84,8 +93,8 @@ void copyData ( MONITOR * a1 , MONITOR * a2 , int c )
 }
 
 char options[4][ BUFFER_SIZE ] = { 
-					" --brightness ",      // --brightness <value>
-					" --gamma ",           // --gamma <r>[:<g>:<b>] 
+					" --brightness ",     
+					" --gamma ",           
 					" --set 'color vibrance' ",  
 					" --set 'vibrant hue' "
 				  };

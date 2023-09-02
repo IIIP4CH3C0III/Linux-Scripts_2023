@@ -1,3 +1,12 @@
+/*
+ * File name   : system.c
+ *
+ * Author	   : Fábio Pacheco
+ *
+ * Description : Functions to get information of the computer, or the program it self, like selecting the monitor.
+ *
+ */
+
 #include "system.h"
 
 bool getMonitors( MONITOR * monitors , int *monitorCount , FILE *output , char buffer[])
