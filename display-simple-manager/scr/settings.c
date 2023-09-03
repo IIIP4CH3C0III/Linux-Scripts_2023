@@ -68,7 +68,7 @@ bool setValues( MONITOR * monitors , WINDOW **mainWindow , int monitorSelected ,
 	if ( line == 4 )
 		monitors[ monitorSelected-1 ].hue        = map( (int)value,0,100,vMin,vMax) ;
 
-	//mvwprintw( *mainWindow , LINES-1 , 1 , "%3.2f" , monitors[ monitorSelected-1 ].brightness );
+	// mvwprintw( *mainWindow , LINES-1 , 1 , "%3.2f" , monitors[ monitorSelected-1 ].brightness );
 
 	noecho();
     nodelay(stdscr, TRUE);
@@ -99,7 +99,7 @@ char options[4][ BUFFER_SIZE ] = {
 					" --set 'vibrant hue' "
 				  };
 
-bool applyValues( MONITOR * set , MONITOR * reset , int c , FILE * output )
+bool applyValues( MONITOR * set , MONITOR * reset , int c , FILE * output , char buffer[] )
 {
 	char * cmd = NULL ;
 	char key ;
@@ -114,13 +114,17 @@ bool applyValues( MONITOR * set , MONITOR * reset , int c , FILE * output )
 
 		mvprintw(LINES-1,1,"Confirm changes by pressing <y>, cancel <any key>.");
 		
-	    nodelay(stdscr, FALSE);
+	  nodelay(stdscr, FALSE);
 		key = getch();
-
+		
 		// NEED TO MAKE SURE THIS ERROR IS HANDLED 
 		// When the user seams to have another display connect, but actually doens't
 		// X Error of failed request:  BadMatch (invalid parameter attributes)
 		// Exit the program safely!!! 
+
+		while( fgets( buffer, BUFFER_SIZE, output ) != NULL )
+			if( strcmp( buffer, "Error") == 0 )
+				exit(1);
 
 		if( key == 'y' || key == 'Y' )
 		{

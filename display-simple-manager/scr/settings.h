@@ -16,7 +16,7 @@
 bool setValues( MONITOR * monitor , WINDOW **mainWindow , int monitorSelected , int line , int vMin , int vMax  );
 void copyData ( MONITOR * a1 , MONITOR * a2 , int c );
 
-bool applyValues( MONITOR * set , MONITOR * reset , int c , FILE * output );
+bool applyValues( MONITOR * set , MONITOR * reset , int c , FILE * output , char buffer[] );
 char * createCommand ( MONITOR * set , int i );
 
 float map( float value, float xmin , float xmax , float ymin , float ymax );

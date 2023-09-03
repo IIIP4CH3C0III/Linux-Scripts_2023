@@ -84,12 +84,12 @@ int main (void)
 
 			if( !(bool)getData( realMonitors , &monitorCount , bashOutput , buffer) )
 			{
-		        fprintf(stderr, "Error retrieving monitor information.\n");
+		    fprintf(stderr, "Error retrieving monitor information.\n");
 				exitDisplay();
 				exit(EXIT_FAILURE);	
 			}
 
-		    printInformation( realMonitors , monitorCount , &mainWindow , monitorSelected); 
+		  printInformation( realMonitors , monitorCount , &mainWindow , monitorSelected); 
 			copyData( realMonitors , setMonitors , monitorCount);
 
 			if( firstTime )
@@ -147,7 +147,7 @@ int main (void)
 
 				case 'A':
 				case 'a':
-					applyValues( setMonitors , defaultMonitors , monitorCount , bashOutput );
+					applyValues( setMonitors , defaultMonitors , monitorCount , bashOutput , buffer );
 					change = false;
 					break;
 
