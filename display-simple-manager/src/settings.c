@@ -9,6 +9,7 @@
 
 #include "settings.h"
 #include "display.h"
+#include "printing.h"
 
 bool setValues( MONITOR * monitors , WINDOW **mainWindow , int monitorSelected , int line , int vMin , int vMax )
 {
@@ -99,7 +100,7 @@ char options[4][ BUFFER_SIZE ] = {
 					" --set 'vibrant hue' "
 				  };
 
-bool applyValues( MONITOR * set , MONITOR * reset , int c , FILE * output , char buffer[] )
+bool applyValues( MONITOR * set , MONITOR * reset , int c , FILE * output , char buffer[] , WINDOW ** window , DETAILS * details )
 {
 	char * cmd = NULL ;
 	char key ;
@@ -112,9 +113,9 @@ bool applyValues( MONITOR * set , MONITOR * reset , int c , FILE * output , char
 		if ( (output = (FILE *)popen( cmd , "r" )) == NULL )
 			return false;
 
-		mvprintw(LINES-1,1,"Confirm changes by pressing <y>, cancel <any key>.");
+		printTXT ( window , details , "Confirm changes by pressing <y>, cancel <any key>." , "" , START , LINES - 1 );
 		
-	  nodelay(stdscr, FALSE);
+		nodelay(stdscr, FALSE);
 		key = getch();
 		
 		// NEED TO MAKE SURE THIS ERROR IS HANDLED 
@@ -128,19 +129,18 @@ bool applyValues( MONITOR * set , MONITOR * reset , int c , FILE * output , char
 
 		if( key == 'y' || key == 'Y' )
 		{
-			clearLine( LINES-1 );
-			mvprintw(LINES-1,1,"Changes made, and confirmed, acknowledge <any key>.");
+			clearWline( window , details , LINES - 1 );
+			printTXT ( window , details , "Changes made, and confirmed, acknowledge <any key>." , "" , START , LINES - 1 );
 			getch();
 		}
 		else
 		{
+			clearWline( window , details , LINES - 1 );
 			cmd = createCommand( reset , i );
-			//mvprintw(12,0,"%s",cmd);		
 			if ( (output = (FILE *)popen( cmd , "r" )) == NULL )
 				return false;	
 
-			clearLine( LINES-1 );
-			mvprintw(LINES-1,1,"Back to before, acknowledge <any key> ");
+			printTXT ( window , details , "Back to before, acknowledge <any key>." , "" , START , LINES - 1 );
 			getch();
 		}
 		

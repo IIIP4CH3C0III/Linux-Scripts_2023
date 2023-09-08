@@ -18,6 +18,7 @@
 #include "system.h"                               
 #include "printing.h"                             
 #include "settings.h"                             
+#include "resources.h"
 
 #define delay               1                     /* Definition of the amount of time in seconds of delay  */ 
 
@@ -40,9 +41,20 @@ int main (void)
 	int rowsBefore    = LINES;                    /* Variable storing the number of lines of the window    */
 	int columnsBefore = COLS ;                    /* Variable storing the number of columns of the window  */
 
-	WINDOW*  bottomWindow = NULL;                 /* Variable of the bottom window presenting the keys     */
-	WINDOW*     topWindow = NULL;                 /* Variable preseting the version and name of the pr     */
-	WINDOW*    mainWindow = NULL;                 /* Variable of the complete window, prints the loop      */
+	init_pair( COLOR_BACKGROUND , COLOR_WHITE , COLOR_BLACK );
+	init_pair( COLOR_FOREGROUND , COLOR_BLACK , COLOR_WHITE );
+	init_pair( COLOR_WARNING    , COLOR_RED   , COLOR_BLACK );
+
+	DETAILS * details [ nWindows ] ;
+	for ( int i = 0 ; i < nWindows ; i++ ) 
+	{
+		details [ i ] = NULL ;
+	    details [ i ] = ( DETAILS * ) loadResources ( i );		
+	}
+
+	WINDOW * windows [ nWindows ] ; 
+	for ( int i = 0 ; i < nWindows ; i++ ) 
+		windows [ i ] = NULL ;
 
 	FILE * bashOutput     = NULL;                 /* Variable storing the output of each comand            */
 	char buffer[ BUFFER_SIZE ] ;                  /* Variable storing a string buffer                      */
@@ -63,14 +75,18 @@ int main (void)
 		if( firstTime ||  windowSizeChanges( &columnsBefore, &rowsBefore) )
 		{                                         /* Be prepared to react if the window size is changed    */                           
 			clear();                              /* Clear the screen as the name says                     */
-
-			bottomWindow = NULL;                  
-			topWindow 	 = NULL;
-			mainWindow   = NULL;
                                                   /* Initialize the windows and present the version & keys */
-			showDisplay( &bottomWindow , &topWindow , &mainWindow );
-			showVersion( &topWindow );
-			showKeys   ( &bottomWindow);
+			for ( int i = 0 ; i < nWindows ; i++ )
+			{
+				windows [ i ] = NULL ;
+				windows [ i ] = (WINDOW *) createNewWindow( details[ i ] );  
+			}
+				
+			printTXT ( &windows[ TOP_BAR ] , details [ TOP_BAR ] , "Brightness/Gamma Manager V0.2" , "Fabio Pacheco" , SPACE_BETWEEN , 0 );
+			printTXT ( &windows[ BOT_BAR ] , details [ BOT_BAR ] , "<B> brightness | <G> gamma | <C> color | <V> vibrance", "", CENTER , 0 );
+			printTXT ( &windows[ BOT_BAR ] , details [ BOT_BAR ] , "<Q> quit | <arrows> move | <A> apply | <D> default", "", CENTER , 1 );
+
+			refresh();
 		}	
 
 		if( !change )
@@ -84,12 +100,12 @@ int main (void)
 
 			if( !(bool)getData( realMonitors , &monitorCount , bashOutput , buffer) )
 			{
-		    fprintf(stderr, "Error retrieving monitor information.\n");
+		    	fprintf(stderr, "Error retrieving monitor information.\n");
 				exitDisplay();
 				exit(EXIT_FAILURE);	
 			}
 
-		  printInformation( realMonitors , monitorCount , &mainWindow , monitorSelected); 
+		  	printInformation( realMonitors , monitorCount , &windows[ BACKGROUND ] , monitorSelected); 
 			copyData( realMonitors , setMonitors , monitorCount);
 
 			if( firstTime )
@@ -99,19 +115,17 @@ int main (void)
 			}
 		}
 		else
-		    printInformation( setMonitors , monitorCount , &mainWindow , monitorSelected); 
+		    printInformation( setMonitors , monitorCount , &windows[ BACKGROUND ] , monitorSelected); 
 
 		keyPressed = getch();
 		if ( keyPressed != ERR )
 			switch ( keyPressed )
 			{
 				default:
-					mvprintw( LINES-1 , 1 , "No function to that key, acknowledge <any key>");
-
+					printTXT( &windows[ BACKGROUND ], details[ BACKGROUND ] , "No function to that key, acknowledge <any key>" , "" , START , LINES-1 );
 				    nodelay(stdscr, FALSE );
 					getch();
 				    nodelay(stdscr, TRUE);
-
 					break;
 			
 				case 'Q':
@@ -121,22 +135,22 @@ int main (void)
 
 				case 'B':
 				case 'b': //TODO
-					change = setValues( setMonitors , &mainWindow , monitorSelected , 1 , minValueBrightness , maxValueBrightness );
+					change = setValues( setMonitors , &windows[ BACKGROUND ] , monitorSelected , 1 , minValueBrightness , maxValueBrightness );
 					break;
 
 				case 'G':
 				case 'g':
-					change = setValues( setMonitors , &mainWindow , monitorSelected , 2 , minGamma , maxGamma );
+					change = setValues( setMonitors , &windows[ BACKGROUND ] , monitorSelected , 2 , minGamma , maxGamma );
 					break;
 
 				case 'C':
 				case 'c':
-					change = setValues( setMonitors , &mainWindow , monitorSelected , 3 , minColorVibrance , maxColorVibrance );
+					change = setValues( setMonitors , &windows[ BACKGROUND ] , monitorSelected , 3 , minColorVibrance , maxColorVibrance );
 					break;
 
 				case 'V':
 				case 'v':
-					change = setValues( setMonitors , &mainWindow , monitorSelected , 4 , minVibrantHue , maxVibrantHue );
+					change = setValues( setMonitors , &windows[ BACKGROUND ] , monitorSelected , 4 , minVibrantHue , maxVibrantHue );
 					break;
 
 
@@ -147,7 +161,8 @@ int main (void)
 
 				case 'A':
 				case 'a':
-					applyValues( setMonitors , defaultMonitors , monitorCount , bashOutput , buffer );
+					clearWline( &windows[ BACKGROUND ] , details[ BACKGROUND ] , LINES - 1 );
+					applyValues( setMonitors , defaultMonitors , monitorCount , bashOutput , buffer , &windows[ BACKGROUND ] , details[ BACKGROUND ]);
 					change = false;
 					break;
 
@@ -157,11 +172,17 @@ int main (void)
 					copyData( defaultMonitors , setMonitors , monitorCount );
 					break;
 			}
-			
 		sleep( delay );
-		clearLine( LINES-1 );
+		clearWline( &windows[ BACKGROUND ] , details[ BACKGROUND ] , LINES - 1 );
 	}
 	exitDisplay();
 
+	for( int i = 0 ; i < nWindows; i++ ) 
+		if ( details[ i ] != NULL ) {
+			free( details[i] );
+			details[i] = NULL ;
+		}
+	bashOutput = NULL ;
+	
 	return 0;
 }
